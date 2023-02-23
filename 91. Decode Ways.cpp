@@ -10,6 +10,7 @@ public:
         memo[n]=count;
         return count;
  }
+    
     int numDecodings(string s) {
         vector<int>memo(s.size() + 1, -1);
         memo[s.size()] = 1;
