@@ -27,7 +27,8 @@ int sz = 0,tz =0;
         }return dp[0][0];
     }
      int solveTabularSpaceOptimized(string &s, string &t){
-       vector<int>next(s.size()+1,0),curr(s.size()+1,0);
+       int mx = max(tz,sz);
+       vector<int>next(mx+1,0),curr(mx+1,0);
         for(int i=sz-1;i>=0;i--){
             for(int j=tz-1;j>=0;j--){
                  int x = 0;
@@ -43,7 +44,7 @@ int sz = 0,tz =0;
          sz = text1.length(), tz = text2.length();
         // vector<vector<int>>dp(sz,vector<int>(tz,-1));
         // return solve(text1,text2,0,0,dp);
-        return solveTabular(text1,text2);
+     //   return solveTabular(text1,text2);
         return solveTabularSpaceOptimized(text1,text2);
     }
 };
