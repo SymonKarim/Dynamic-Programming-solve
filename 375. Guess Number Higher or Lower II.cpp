@@ -1,21 +1,35 @@
 class Solution {
 public:
-   
-   int solve(int start, int end,vector<vector<int>>&dp){
-       if(start>=end) return 0;
-       if(start<=0) return 0;
-       if(dp[start][end]!=-1) return dp[start][end];
-       int ans = INT_MAX;
-       for(int i=start;i<=end;i++){
-           ans = min(ans, i+ max(solve(start,i-1,dp), solve(i+1,end,dp)));
-       }
-       return dp[start][end]= ans;
+    int solve(vector<int>& prices, int fee, bool buy, int index,vector<vector<int>>&dp){
+           if(index==prices.size()) return 0;
+           if(dp[index][buy] != -1) return dp[index][buy];
+           int profit = 0,mx=0;
+           if(buy){
+               profit = max(-prices[index] + solve(prices, fee, 0, index+1, dp),solve(prices, fee, 1, index+1, dp));
+           }else{
+              profit = max(prices[index] - fee + solve(prices, fee, 1, index+1, dp),solve(prices, fee, 0, index+1, dp));
+           }
+           return dp[index][buy] = profit;
+    }
+    int solveTabular(vector<int>& prices, int fee){
+       vector<vector<int>>dp(prices.size()+1,vector<int>(2,0));
 
-   }
-    int getMoneyAmount(int n) {
-        if(n==0) return 0;
-        if(n<=2) return n-1;
-        vector<vector<int>>dp(n+1,vector<int>(n+1,-1));
-        return solve(1, n,dp);
+       for(int i = prices.size()-1;i>=0;i--){
+           int profit = 0;
+           for(int buy = 0; buy<2;buy++){
+           if(buy){
+               profit = max(-prices[i] + dp[i+1][0],dp[i+1][1]);
+           }else{
+              profit = max(prices[i] - fee +  dp[i+1][1], dp[i+1][0]);
+           }
+            dp[i][buy] = profit;
+           }
+       }
+       return dp[0][1];
+    }
+    int maxProfit(vector<int>& prices, int fee) {
+        // vector<vector<int>>dp(prices.size()+1,vector<int>(2,-1));
+        // return solve(prices,fee,  1, 0, dp);
+        return solveTabular(prices, fee);
     }
 };
